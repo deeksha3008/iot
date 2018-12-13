@@ -8,6 +8,7 @@ import time
 import requests
 import json
 import os
+import MySQLdb as mysql
 #GPIO.setwarnings(False) # Ignore warning for now
 #GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 #GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -34,10 +35,42 @@ def on_message(client, userdata, message):
     	print(message.payload)
     	socketio.emit('camera',{'data':message.payload})
 
-
-
-
-
+@app.route('/smoke')
+def smoke():
+    db = mysql.connect("iot.db")
+    c = db.cursor()
+    c.execute("select smoke from data where smoke is not NULL")
+    data = c.fetchall()
+    data = data[-10:]
+    values = [data[i][0] for i in range(0,10)]
+    return render_template('smoke.html',values=values)
+@app.route('/temperature')
+def smoke():
+    db = mysql.connect("iot.db")
+    c = db.cursor()
+    c.execute("select temperature from temperature where smoke is not NULL")
+    data = c.fetchall()
+    data = data[-10:]
+    values = [data[i][0] for i in range(0,10)]
+    return render_template('temperature.html',values=values)
+@app.route('/humidity')
+def smoke():
+    db = mysql.connect("iot.db")
+    c = db.cursor()
+    c.execute("select humidity from data where humidity is not NULL")
+    data = c.fetchall()
+    data = data[-10:]
+    values = [data[i][0] for i in range(0,10)]
+    return render_template('humidity.html',values=values)
+@app.route('/pulse')
+def smoke():
+    db = mysql.connect("iot.db")
+    c = db.cursor()
+    c.execute("select pulse from data where pulse is not NULL")
+    data = c.fetchall()
+    data = data[-10:]
+    values = [data[i][0] for i in range(0,10)]
+    return render_template('pulse.html',values=values)
 mqttc=mqtt.Client()
 mqttc.on_connect = on_connect
 mqttc.on_message = on_message
